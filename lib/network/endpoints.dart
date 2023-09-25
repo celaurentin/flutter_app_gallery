@@ -11,8 +11,8 @@ class EndPoints{
   }
 
   //Default list size is 30
-  String getListOfImages(){
-    return "${baseUrl}v2/list";
+  String getListOfImages(int page, int pageSize){
+    return "${baseUrl}v2/list?page=$page&limit=$pageSize";
   }
 
   //Returns specific image given the id

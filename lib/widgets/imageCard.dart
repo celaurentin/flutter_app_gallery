@@ -11,7 +11,7 @@ class ImageCard extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Card(
-      surfaceTintColor: Colors.deepPurple,
+      surfaceTintColor: Colors.black12,
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -20,6 +20,10 @@ class ImageCard extends StatelessWidget{
           children: [ 
             Text(authorName,
                 textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  ),
                 ),
                 Flexible(
                 child: Column(
@@ -27,12 +31,11 @@ class ImageCard extends StatelessWidget{
                   children: [
                     Image.network(imageUrl)
                     ],
-          ),
-          ),
-          ],
+                  ),
+                ),
+            ],
         ),
       )
     );
   }
 }
-  
