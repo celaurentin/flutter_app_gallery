@@ -18,6 +18,7 @@ class ImageWebService{
   Future<WebImageList> fetchListOfImages(int page, int pageSize) async{
     var isCacheExist = await APICacheManager().isAPICacheKeyExist(page.toString());
     if (!isCacheExist) {
+      print("API Hit");
       try {
         final response = await _client
             .get(Uri.parse(endPoints.getListOfImages(page, pageSize)));
@@ -37,6 +38,7 @@ class ImageWebService{
         return Future.error(e);
       }
     } else {
+      print("Cache Hit");
       var cacheData = await APICacheManager().getCacheData(page.toString());
       return WebImageList.fromJson(jsonDecode(cacheData.syncData));
     }

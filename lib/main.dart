@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   late int _currentPage;
   late int _currentIndex;
-  final int _pageSize = 4;
+  final int _pageSize = 20;
 
   @override
   void initState() {
