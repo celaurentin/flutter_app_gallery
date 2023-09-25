@@ -9,12 +9,11 @@ import 'package:http/http.dart' as http;
 class ImageWebService{
   final http.Client _client;
   final EndPoints endPoints = EndPoints();
-  final int pageSize = 20;
 
   ImageWebService(this._client);
   
   //HINT: Consider creating an api call to collect a list of web image info (endpoints.getListOfImages)
-  Future<WebImageList> fetchListOfImages(int page) async{
+  Future<WebImageList> fetchListOfImages(int page, int pageSize) async{
     try{
       final response =  await _client
           .get(Uri.parse(endPoints.getListOfImages(page, pageSize)));

@@ -41,12 +41,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<WebImageList>? _webImageList;
   List<WebImage> _webImages = [];
 
-  int page = 1;
+  int _currentPage = 1;
+  int _currentIndex = 0;
+  final int _pageSize = 4;
 
   @override
   void initState() {
     super.initState();
-    _webImageList = ImageWebService(http.Client()).fetchListOfImages(page);
+    fetchImages();
+    _currentIndex = 0;
+    _currentPage = 1;
   }
 
   @override
@@ -64,10 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     _webImages = snapshot.data!.webimages;
-
                     return CarouselSlider.builder(
                         carouselController: controller,
-                        options: CarouselOptions(height: 400, viewportFraction: 1),
+                        options: CarouselOptions(
+                            height: 400,
+                            viewportFraction: 1
+                        ),
                         itemCount: _webImages.length,
                         itemBuilder: (context, index, realIndex) {
                           return ImageCard(authorName: _webImages[index].author,imageUrl: _webImages[index].download_url);
@@ -102,7 +108,49 @@ class _MyHomePageState extends State<MyHomePage> {
     ]
   );
 
-  void next() => controller.nextPage();
-  void previous() => controller.previousPage();
+  void fetchImages() async {
+    setState(() {
+      _webImageList = ImageWebService(http.Client()).fetchListOfImages(_currentPage, _pageSize);
+    });
+
+  }
+
+  void next() => {
+    _currentIndex++,
+    if (_currentIndex < _pageSize*_currentPage) {
+      debugPrint("current Index:$_currentIndex for page:$_currentPage"),
+      controller.nextPage()
+    } else
+      {
+        setState(() {
+          _currentPage++;
+        }),
+        debugPrint(
+            "current Index:$_currentIndex fetching new images for page: $_currentPage"),
+        fetchImages()
+      }
+  };
+
+  void previous() => {
+    _currentIndex--,
+    if (_currentIndex == 0) {
+      controller.previousPage()
+    } else if (_currentIndex > 0) {
+      if (_currentIndex < (_pageSize * _currentPage)) {
+        setState(() {
+          if (_currentPage > 1) _currentPage--;
+        }),
+        debugPrint(
+            "current Index:$_currentIndex fetching new images for page: $_currentPage"),
+        fetchImages()
+      } else
+        {
+          debugPrint("current Index:$_currentIndex for page:$_currentPage"),
+          controller.previousPage()
+        }
+    } else {
+      _currentIndex++
+    }
+  };
 
 }
