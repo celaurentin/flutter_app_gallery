@@ -40,6 +40,8 @@ dependencies:
 
   carousel_slider: ^4.2.1
 
+  api_cache_manager: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
