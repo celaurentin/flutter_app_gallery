@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:api_cache_manager/api_cache_manager.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
@@ -18,6 +19,13 @@ import 'api_test.mocks.dart';
  * You want to cover a succesful call and a possible failure 
  */
 
+class ApiCacheManagerMock extends Mock implements APICacheManager{
+  @override
+  Future<bool> isAPICacheKeyExist(String? key) =>
+      super.noSuchMethod(Invocation.method(#isAPICacheKeyExist, [key]),
+      returnValue: Future<bool>.value(false));
+}
+
 @GenerateMocks([http.Client])
 void main(){
   ImageWebService imageWebService;
@@ -29,11 +37,22 @@ void main(){
     WebImageList mockWebImageList = WebImageList(webimages: [mockWebImage]);
 
     //Here is an example of a successful networking call
-    test("Return webImageList if http completes", () async{
+    test("Return webImage if http completes", () async{
       final httpClient = MockClient();
       imageWebService = ImageWebService(httpClient);
       when(httpClient.get(any)).thenAnswer((_) async => http.Response(jsonEncode(mockWebImage),200));
       expect(imageWebService.fetchWebImageInfo(1),isA<Future<WebImage>>());
     });
+
+    test("Return webImageList if http completes", () async{
+      final httpClient = MockClient();
+      final apiCacheManagerMock = ApiCacheManagerMock();
+      imageWebService = ImageWebService(httpClient);
+
+      when(apiCacheManagerMock.isAPICacheKeyExist("1")).thenAnswer((_) => Future.value(false));
+      when(httpClient.get(any)).thenAnswer((_) async => http.Response(jsonEncode(mockWebImageList),200));
+      expect(imageWebService.fetchListOfImages(1, 1),isA<Future<WebImageList>>());
+    });
+
   });
 }
