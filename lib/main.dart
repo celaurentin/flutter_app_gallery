@@ -1,3 +1,4 @@
+import 'package:api_cache_manager/utils/cache_manager.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_gallery/models/webimage.dart';
@@ -50,6 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _currentIndex = 0;
     _currentPage = 1;
+    APICacheManager().emptyCache();
     fetchImages();
   }
 
@@ -83,9 +85,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         itemCount: _webImages.length,
                         itemBuilder: (context, index, realIndex) {
+                          var height = _webImages[index].height;
+                          if (height > 350) height = 350;
                           return ImageCard(
                               authorName: _webImages[index].author,
-                              imageUrl: _webImages[index].download_url
+                              imageUrl: _webImages[index].download_url,
+                              height: height.toDouble()
                           );
                         }
                     );

@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 class ImageCard extends StatelessWidget{
   final String authorName;
   final String imageUrl;
+  final double height;
 
-  const ImageCard({super.key, required this.authorName,required this.imageUrl});
+  const ImageCard({super.key, required this.authorName,required this.imageUrl, required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class ImageCard extends StatelessWidget{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network(imageUrl)
+                    Image.network(imageUrl, height: height)
                     ],
                   ),
                 ),
